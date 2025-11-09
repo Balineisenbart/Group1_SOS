@@ -70,14 +70,14 @@ def main(argv: list[str] | None = None) -> int:
     aco = ACO(items=items, travel_times=travel_times)
     aco.construct_graph()
 
-    aco.find_best_path()
+    path = aco.find_best_path()
 
     if args.visualize:
-      aco.graph.visualize(shortest_path=[])
+      aco.graph.visualize(shortest_path=path)
 
     return 0
   except Exception as exc:
-    LOG.exception("Failed to extract travel durations: %s", exc)
+    LOG.exception("Failed to run ACO: %s", exc)
     return 2
 
 if __name__ == "__main__":
