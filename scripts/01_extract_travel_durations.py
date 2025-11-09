@@ -14,7 +14,7 @@ import argparse
 import logging
 from pathlib import Path
 from typing import Any
-from utils import setup_logging
+from src.utils import setup_logging
 import requests
 from dotenv import load_dotenv
 import os
