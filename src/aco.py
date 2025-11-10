@@ -70,7 +70,7 @@ def find_best_path(self,
   LOG.info("Finding best path using ACO algorithm...")
 
   rng = random.Random(seed)
-  nxg = self.graph._nxgraph
+  nxg = self.graph._nxGraph
 
   try: 
     best_path, best_cost = self.shortest_path()
@@ -107,19 +107,19 @@ def find_best_path(self,
         iter_best_path = path
 
 #here evaporation is introduced - establishing optimization
-      for a, b in nxg.edges:
-        tau = float(nxg[a][b].get("pheromones", 1.0))
-        nxg[a][b]["pheromones"] = max(1e-12, (1.0 - rho) * tau)
+    for a, b in nxg.edges:
+      tau = float(nxg[a][b].get("pheromones", 1.0))
+      nxg[a][b]["pheromones"] = max(1e-12, (1.0 - rho) * tau)
 
 #refreshing of pheromones - node selection reinforcement
-      if iter_best_path is not None and iter_best_cost > 0:
-        deposit = Q / float(iter_best_cost)
-        for a, b in zip(iter_best_path, iter_best_path[1:]):
-          nxg[a][b]["pheromones"] = float(nxg[a][b]["pheromones"]) + deposit
+    if iter_best_path is not None and iter_best_cost > 0:
+      deposit = Q / float(iter_best_cost)
+      for a, b in zip(iter_best_path, iter_best_path[1:]):
+        nxg[a][b]["pheromones"] = float(nxg[a][b]["pheromones"]) + deposit
 
-        if iter_best_cost < best_cost:
-          best_cost = int(iter_best_cost)
-          best_path = list(iter_best_path)
+      if iter_best_cost < best_cost:
+        best_cost = int(iter_best_cost)
+        best_path = list(iter_best_path)
     
     LOG.debug(
       "iter=%d iter_best=%s global_best=%s",
