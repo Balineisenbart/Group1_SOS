@@ -56,3 +56,5 @@ class ACO:
     # graph.visualize(shortest_path=["A", "B", "C", "D"])
 
     LOG.info("Finding best path using ACO algorithm...")
+
+# transition rule, evaporation, deposition
