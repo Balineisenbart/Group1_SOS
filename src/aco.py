@@ -92,7 +92,6 @@ class ACO:
     if not candidates:
       return None
     
-
     """roulette wheel target picking, influenced by weight"""
     total = sum(weights)
     r = rng.random()*total #r is a random number from 0 to total
@@ -109,16 +108,6 @@ class ACO:
     for a, b in zip(path, path[1:]):
       cost += int(nxg[a][b].get("duration", 0))
     return int(cost)
-
-  def shortest_path(self) -> Tuple[List[str], int]:
-
-    """Dijkstra baseline on edge attribute 'duration"""
-
-    G = self.graph._nxGraph
-    path = nx.shortest_path(G, source="START", target="END", weight="duration")
-    cost = nx.shortest_path_length(G, source="START", target="END", weight="duration")
-
-    return path, int(cost)
 
   def find_best_path(self, 
                       pheromones: float = 1.0,
@@ -139,10 +128,8 @@ class ACO:
     rng = random.Random(seed)
     nxg = self.graph._nxGraph
 
-    try: 
-      best_path, best_cost = self.shortest_path()
-    except Exception as e:
-      raise RuntimeError("Graph is not connected from START to END") from e
+    best_path: List[str] = []
+    best_cost = float("inf")
 
     for it in range(iters):
       iter_best_path: Optional[List[str]] = None
