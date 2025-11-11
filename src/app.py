@@ -70,8 +70,9 @@ def main(argv: list[str] | None = None) -> int:
     aco = ACO(items=items, travel_times=travel_times)
     aco.construct_graph()
 
-    path = aco.find_best_path()
-
+    path, cost = aco.find_best_path()
+    LOG.info("ACO best cost: %s", cost)
+    
     if args.visualize:
       aco.graph.visualize(shortest_path=path)
 
