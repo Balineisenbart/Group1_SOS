@@ -14,6 +14,12 @@ class Graph:
   
   def add_edge(self, from_id: str, to_id: str, **attrs) -> None:
     self._nxGraph.add_edge(from_id, to_id, **attrs)
+
+  def neighbors(self, node_id: str) -> List[str]:
+    return list(self._nxGraph.neighbors(node_id))
+  
+  def get_cost(self, node_id: str, target_id: str) -> int:
+    return self._nxGraph[node_id][target_id]["duration"]
         
   def visualize(self, shortest_path: List[str]) -> None:
     for edge in self._nxGraph.edges:

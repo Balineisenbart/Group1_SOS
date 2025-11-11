@@ -1,5 +1,9 @@
 import logging
 import sys
+import networkx as nx
+from typing import List, Tuple, Optional
+
+
 
 def setup_logging() -> None:
   logging.basicConfig(
@@ -56,8 +60,18 @@ def _choose_next(self, u: str, pheromones: float, heuristic: float, rng: random.
       return v
   return candidates[-1]
 
+def _path_cost(self, path: List[str]) -> int:
+  nxg = self.graph_nxGraph
+  cost = 0
+  for a, b in zip(path, path[1:]):
+    cost += int(nxg[a][b].get("duration", 0))
+  return int(cost)
+
 def shortest_path(self) -> Tuple[List[str], [int]]:
 """Dijkstra baseline on edge attribute 'duration"""
-import networkx as nx
 
+G = self.graph._nxGraph
+path = nx.shortest_path(G, source="START", target="END", weight="duration")
+cost = nx.shortest_path_length(G, source="START", target="END", weight="duration")
 
+return path, int(cost)

@@ -1,4 +1,5 @@
 import logging
+from ant import Ant
 from data import Item, TravelTime
 from graph import Graph
 import random
@@ -51,6 +52,7 @@ class ACO:
               pheromones=1.0,
               duration=travel_time.duration if travel_time else -1,
           )
+<<<<<<< HEAD
       
 
 def find_best_path(self, 
@@ -129,3 +131,22 @@ def find_best_path(self,
     )
 
   return best_path, best_cost
+=======
+
+  def find_best_path(self) -> list[str]:
+    LOG.info("Finding best path using ACO algorithm...")
+
+    ant = Ant(
+        graph=self.graph,
+        source="START",
+        destination="END",
+    )
+
+    ant.deploy()
+
+    return ant.path
+
+    
+    
+
+>>>>>>> f2c74b3e3c0044aa4495e9ceacebd007af5ef41a
