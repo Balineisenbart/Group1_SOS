@@ -14,12 +14,13 @@ class ACO:
   items: list[Item]
   travel_times: list[TravelTime]
 
-  graph = Graph()
+  #graph = Graph()
 
   def __init__(self, items, travel_times) -> None:
     LOG.info("Initializing ACO...")
     self.items = items
     self.travel_times = travel_times
+    self.graph = Graph()
 
   def construct_graph(self):
     LOG.info("Constructing graph for ACO...")

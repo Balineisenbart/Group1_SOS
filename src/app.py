@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 from aco import ACO
 from data import Item, TravelTime
-from utils import setup_logging
+from utils import setup_logging, hyperparam_tuning
 import requests
 from dotenv import load_dotenv
 import os
@@ -34,6 +34,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
   p.add_argument("-iloc", "--input-locations", type=Path, required=False, help="Path to input file containing the location infos (.csv).", default=Path("data/input.csv"))
   p.add_argument("-idur", "--input-durations", type=Path, required=False, help="Path to input file containing the travel durations (.csv).", default=Path("data/travel_times.csv"))
   p.add_argument("-v", "--visualize", action="store_true", required=False, help="Visualize the graph.", default=False)
+  p.add_argument("--tune", action="store_true", help="Runa the manual hyperparameter search before executing ACO")
   return p.parse_args(argv)
 
 def main(argv: list[str] | None = None) -> int:
@@ -70,8 +71,22 @@ def main(argv: list[str] | None = None) -> int:
     aco = ACO(items=items, travel_times=travel_times)
     aco.construct_graph()
 
-    path, cost = aco.find_best_path()
-    LOG.info("ACO best cost: %s", cost)
+    if args.tune:
+      best = hyperparam_tuning(items, travel_times)
+      path = best["path"]
+      cost = best["best_cost"]
+      if path is None:
+        path, cost = aco.find_best_path(seed=best["seed"] or 0, **best["params"])
+      LOG.info(
+        "Best params=%s avg_cost=%.2f best_cost=%s seed=%s",
+        best["params"],
+        best["avg_cost"],
+        cost,
+        best["seed"],
+      )
+    else:
+      path, cost = aco.find_best_path()
+      LOG.info("ACO best cost: %s", cost)
     
     if args.visualize:
       aco.graph.visualize(shortest_path=path)
