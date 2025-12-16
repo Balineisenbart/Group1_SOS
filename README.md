@@ -1,1 +1,0 @@
-# Group1_SOS_SeidlRally
