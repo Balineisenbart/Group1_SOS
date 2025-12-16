@@ -1,0 +1,70 @@
+osm_id,name,street,housenumber,postcode,city,lat,lon,district_no
+1308621529,A Barraca,Hohenstaufengasse,7,1010,Wien,"48,2136415","16,3659573",1
+4551892507,Achilleus,Köllnerhofgasse,3,1010,Wien,"48,2102916","16,3756088",1
+359238262,Aera,Gonzagagasse,11,1010,Wien,"48,2150091","16,3705505",1
+5904861029,2nd Street Burger,Kleine Stadtgutgasse,10/1,1020,Wien,"48,2192397","16,3886282",2
+2048616571,3/4 Takt,Praterstraße,54,1020,Wien,"48,2160166","16,3873739",2
+98105901,Altes Jägerhaus,Freudenau,255,1020,Wien,"48,193241","16,4392997",2
+410455891,3er,Juchgasse,23,1030,Wien,"48,1964902","16,3925616",3
+561323738,575 Sagmeister,Schimmelgasse,11,1030,Wien,"48,1931196","16,4018972",3
+4063613611,Aguacate,Landstraßer Gürtel,19,1030,Wien,"48,1885167","16,3862665",3
+2137688161,Alma,Große Neugasse,31,1040,Wien,"48,193893","16,3630653",4
+618284053,Alt-Wiener Gasthaus Buchecker und Sohn,Gußhausstraße,23,1040,Wien,"48,1970001","16,3711774",4
+1363354897,Aromat,Margaretenstraße,52,1040,Wien,"48,1943999","16,3620757",4
+2478696679,Ajisai: Ramen Sushi Bar,Reinprechtsdorfer Straße,58-60,1050,Wien,"48,1873463","16,3525949",5
+895302724,Apadana,Hamburgerstraße,1,1050,Wien,"48,1960081","16,3573875",5
+5664809637,Asia Cuisine Bowl,Schönbrunner Straße,67,1050,Wien,"48,1907165","16,3554493",5
+4192093000,Aroi Thai,Stumpergasse,44-46,1060,Wien,"48,1945816","16,3439449",6
+1454374331,Aux Gazelles,Rahlgasse,5,1060,Wien,"48,2016206","16,3610714",6
+4852403788,BLOCK HOUSE,Linke Wienzeile,4,1060,Wien,"48,1996101","16,3646354",6
+9995798817,&flora,Breite Gasse,9,1070,Wien,"48,2035736","16,3566024",7
+442585871,7Sternbräu,Siebensterngasse,19,1070,Wien,"48,2021962","16,3535215",7
+244497161,Amerlingbeisl,Stiftgasse,8,1070,Wien,"48,203105","16,3543901",7
+2579219364,808 - Eight o' Eight,Laudongasse,36,1080,Wien,"48,2132604","16,3471466",8
+3380176573,ARPI street,Lange Gasse,16,1080,Wien,"48,2079766","16,3527473",8
+6778160929,Aloha bowl,Josefstädter Straße,9,1080,Wien,"48,2091926","16,3532325",8
+355686988,Akakiko,Julius-Tandler-Platz,4,1090,Wien,"48,226141","16,3623519",9
+311283313,Asia Restaurant Li-Li,Fuchsthallergasse,14,1090,Wien,"48,2250124","16,3509534",9
+10238950146,Aspic,Garnisongasse,10,1090,Wien,"48,2159492","16,3568986",9
+2457088247,Adana Kebabhouse,Favoritenstraße,113,1100,Wien,"48,1751168","16,3780334",10
+3563688393,Altes Schutzhaus Domaya,Urselbrunnengasse,15A,1100,Wien,"48,169074","16,3968389",10
+948326965,Alxinger-Stüberl,Alxingergasse,24,1100,Wien,"48,1774965","16,368136",10
+8334692909,Al Caponne,Münnichplatz,1,1110,Wien,"48,1584348","16,4736952",11
+2669480090,Angy's Café Balkan,Kopalgasse,55-61,1110,Wien,"48,1798564","16,4235893",11
+12390124794,Asahimoto,Baudißgasse,4-6,1110,Wien,"48,1461871","16,4605911",11
+12952062259,Al Capriccio,Mona-Lisa-Steiner-Weg,10/1,1120,Wien,"48,1581361","16,2950156",12
+2750669760,Antep Evi Grill Haus,Khleslplatz,5,1120,Wien,"48,1624068","16,3221796",12
+2454512962,Asia Restaurant Ecke,Flurschützstraße,21,1120,Wien,"48,179847","16,3423938",12
+12843952346,Apapika Poke Bowl,Hitzinger Hauptstraße,8,1130,Wien,"48,1870691","16,3026693",13
+5578380846,Argo,Lainzer Straße,131,1130,Wien,"48,177607","16,2840089",13
+10013110915,Bioparadies,Altgasse,23A,1130,Wien,"48,1854439","16,2976379",13
+4030881336,AKAZ Sushi,Hütteldorfer Straße,130D,1140,Wien,"48,1975724","16,2971773",14
+1590153702,Anna & Jagetsberger,Breitenseerstraße,40,1140,Wien,"48,2014108","16,309278",14
+136322935,Bardolino,Hauptstraße,118,1140,Wien,"48,2098768","16,2143269",14
+5981514091,ALL REIS Bangkok Street Food,Schweglerstraße,12,1150,Wien,"48,1973602","16,3290004",15
+442551000,Anatolien Cafe & Restaurant,Wurzbachgasse,11,1150,Wien,"48,2026951","16,335781",15
+12479126905,Anzo's Food,Märzstraße,36,1150,Wien,"48,199371","16,3316912",15
+133618467,10er Marie,Ottakringer Straße,222-224,1160,Wien,"48,2142784","16,3087037",16
+1488907662,Achillion,Ottakringer Straße,233,1160,Wien,"48,2142351","16,3063883",16
+1991433140,Bierosophie,Gablenzgasse,60A,1160,Wien,"48,2053228","16,3259232",16
+5582570021,1001 Nacht,Jörgerstraße,50,1170,Wien,"48,2182776","16,3338162",17
+4239841589,Al Capone,Hernalser Hauptstraße,189,1170,Wien,"48,223932","16,3137898",17
+4019827636,Asia Restaurant Yuan,Hernalser Hauptstraße,200,1170,Wien,"48,2247275","16,3127712",17
+1167293625,Amici Pizzeria,Gersthofer Straße,14,1180,Wien,"48,2330784","16,3282714",18
+5881659505,Ariston,Abt-Karl-Gasse,25,1180,Wien,"48,2259832","16,3400981",18
+295413460,Bao panda,Kreuzgasse,12,1180,Wien,"48,2223506","16,3418217",18
+1107533195,3 Kugel Schachinger,Sieveringer Straße,99,1190,Wien,"48,2480121","16,3292407",19
+138314025,Ablaufdatum,Sieveringer Straße,118,1190,Wien,"48,2513577","16,3238449",19
+10583638334,Amador,Grinzinger Straße,86,1190,Wien,"48,2539176","16,3585918",19
+476441840,Adriano,Wallensteinstraße,54,1200,Wien,"48,230626","16,3741888",20
+1467334210,Bio Welt,Rauscherstraße,6a,1200,Wien,"48,2304201","16,3757038",20
+30528334,Brigittenauer Stadl,Griegstraße,1-3,1200,Wien,"48,2497133","16,3752683",20
+2247657921,Akropolis 21,Prager Straße,14,1210,Wien,"48,2597544","16,3962126",21
+415627424,Amigo 2,Brünner Straße,255,1210,Wien,"48,2997596","16,4217137",21
+2510053075,Arbeilo,Leopoldauer Straße,164,1210,Wien,"48,262725","16,433679",21
+2450295917,Alt Wiener Stuben,Erzherzog-Karl-Straße,66,1220,Wien,"48,2337373","16,4430977",22
+12864827040,Buqqo,Attemsgasse,42,1220,Wien,"48,2499291","16,4345411",22
+9645157393,Cafe & Restaurant Backofen,Schiffmühlenstraße,80,1220,Wien,"48,2249715","16,423144",22
+354615386,Absolut Restaurant & Bar,Altmannsdorfer Straße,179,1230,Wien,"48,1522025","16,3208732",23
+1363142268,Akafuk Sushi,Breitenfurter Straße,359,1230,Wien,"48,1393715","16,2900731",23
+8209501770,Alino's Restaurant,Stenografengasse,6,1230,Wien,"48,1501173","16,286275",23
