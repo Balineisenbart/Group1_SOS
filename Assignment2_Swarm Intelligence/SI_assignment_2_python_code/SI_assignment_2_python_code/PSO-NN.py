@@ -5,7 +5,14 @@ import time
 import itertools
 import pandas as pd
 import seaborn as sns
-import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.colors import Normalize
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
 
 
 class NeuralNetwork:
@@ -182,19 +189,25 @@ def run_pso(par_C1, par_C2, par_W, par_SwarmSize, n_iteration, batchsize):
     return accuracy, secs
 
 def grouped_plot(df, best_ids=None):
-    params = ["c1", "c2", "w", "sw", "iters", "bs"]
-    ncols = 3
-    nrows = (len(params) + ncols - 1) // ncols
+    params = ["c1", "c2", "w", "sw"]
+    ncols = 2
+    nrows = 2
 
-    fig, axes = matplotlib.pyplot.subplots(nrows, ncols, figsize=(14, 8), sharex=True, sharey=True)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(14, 8), sharex=True, sharey=True)
     axes = axes.flatten()
 
     for ax, plot_param in zip(axes, params):
+        values = df[plot_param].astype(float)
+        norm = Normalize(vmin=values.min(), vmax=values.max())
+        cmap = cm.get_cmap("viridis")  # or "plasma"
         df["param_value"] = plot_param + "_" + df[plot_param].astype(str)
-        df["param_value"] = pd.Categorical(df["param_value"])
-        hue_order = list(df["param_value"].cat.categories)
-        palette = sns.color_palette("tab20", n_colors=len(hue_order))
-
+        # map each distinct value to a color by its numeric magnitude
+        color_map = {
+            pv: cmap(norm(val))
+            for pv, val in zip(df["param_value"], values)
+        }
+        palette = [color_map[pv] for pv in df["param_value"].unique()]
+        hue_order = list(df["param_value"].unique())
         sns.scatterplot(
             data=df, x="secs", y="acc",
             hue="param_value", hue_order=hue_order,
@@ -202,6 +215,9 @@ def grouped_plot(df, best_ids=None):
         )
 
         classic_acc, classic_secs = assign_acc_secs(dataset)
+
+        ax.axvline(classic_secs, color="black", linestyle="--", linewidth=0.8, alpha=0.8)
+        ax.axhline(classic_acc, color="black", linestyle="--", linewidth=0.8, alpha=0.8)
 
         classic_marker = ax.scatter(classic_secs, classic_acc, color="orange", edgecolor="black", zorder=5, label="classic-NN")
         ax.set_title(plot_param)
@@ -225,8 +241,7 @@ def grouped_plot(df, best_ids=None):
 
     g = sns.relplot(
         data=df, x="secs", y="acc",
-        hue="c1", style="c2", size="w",
-        col="bs", col_wrap=2, kind="scatter",
+        hue="c1", style="c2", size="w", kind="scatter",
         palette="tab10", alpha=0.8, height=3.5,
         legend=True
     )
@@ -234,12 +249,14 @@ def grouped_plot(df, best_ids=None):
 
     # add classic point to every facet
     for ax in g.axes.flatten():
-        cm = ax.scatter(classic_secs, classic_acc, color="orange",
+        ax.axvline(classic_secs, color="black", linestyle="--", linewidth=0.8, alpha=0.8)
+        ax.axhline(classic_acc, color="black", linestyle="--", linewidth=0.8, alpha=0.8)
+        classic_marker = ax.scatter(classic_secs, classic_acc, color="orange",
                         edgecolor="black", zorder=5, label="classic-NN")
         ax.text(classic_secs, classic_acc, "classic-NN",
                             fontsize=5, ha="center", va="center")
 
-    matplotlib.pyplot.show()
+    plt.show()
 
 
 
@@ -265,43 +282,135 @@ def repeat_and_plot(configs, n_repeats=10):
     # summary stats
     summary = (
         df_rep
-        .groupby(["cfg_id", "c1", "c2", "w", "sw", "iters", "bs"])
+        .groupby(["cfg_id", "c1", "c2", "w", "sw"])
         [["acc", "secs"]]
         .agg(["mean", "std"])
         .reset_index()
     )
     summary.columns = [
-        "cfg_id", "c1", "c2", "w", "sw", "iters", "bs",
+        "cfg_id", "c1", "c2", "w", "sw",
         "acc_mean", "acc_std", "secs_mean", "secs_std"
     ]
 
     # plot means with error bars
-    matplotlib.pyplot.figure(figsize=(6,4))
-    matplotlib.pyplot.errorbar(
+    plt.figure(figsize=(6,4))
+    plt.errorbar(
         summary["secs_mean"], summary["acc_mean"],
         xerr=summary["secs_std"], yerr=summary["acc_std"],
         fmt="o", ecolor="gray", capsize=3, label=None
     )
     for _, row in summary.iterrows():
-        matplotlib.pyplot.text(
+        plt.text(
             row.secs_mean, row.acc_mean, f"cfg{int(row.cfg_id)}",
             fontsize=7, ha="center", va="bottom"
         )
-    matplotlib.pyplot.xlabel("secs")
-    matplotlib.pyplot.ylabel("acc")
-    matplotlib.pyplot.title(f"{n_repeats} repeats per config")
-    matplotlib.pyplot.show()
+    plt.xlabel("secs")
+    plt.ylabel("acc")
+    plt.title(f"{n_repeats} repeats per config")
+    plt.show()
 
     return df_rep, summary
 
 
+def get_stats(df):
+
+    df_best = df.copy()
+    df_best["run_id"] = df.index
+
+    corr_spearman = df_best[["acc", "secs", "c1", "c2", "w", "sw"]].corr(method="spearman")
+    print("Spearman Correlation Results:")
+    print(corr_spearman)
+    best = df_best.nlargest(10, "acc")
+    best_ids = set(best["run_id"])
+
+
+    model = ols('secs ~ c1 + c2 + w + sw + w:sw', data=df).fit()
+    anova_results = sm.stats.anova_lm(model, type=2)
+    print("two-Way Anova Results:")
+    print(anova_results)
+
+    #ANOAV w/o sw
+    model_no_sw = ols('secs ~ c1 + c2 + w', data=df).fit()
+    anova_results_no_sw = sm.stats.anova_lm(model, type=2)
+    print("two-Way Anova Results w/o sw:")
+    print(anova_results_no_sw)
+
+    #kmeans clustering
+    features = ["acc", "secs", "c1", "c2", "w", "sw"]  
+    X = StandardScaler().fit_transform(df[features])
+
+    kmeans = KMeans(n_clusters=3, random_state=0, n_init="auto").fit(X)
+    df["cluster"] = kmeans.labels_
+
+    #profiel clusters against parameters
+    summary_cluster = df.groupby("cluster")[["acc", "secs", "c1", "c2", "w", "sw"]].agg(["mean", "std"])
+    print(summary_cluster)
+
+    #stacked bar plot of params per cluster vs parameter
+    params = ["c1", "c2", "w", "sw"]
+    ncols = 2
+    nrows = 2
+    fig, axs = plt.subplots(nrows, ncols, figsize=(10, 10))
+    axes = axs.flatten()
+
+    for ax, param in zip(axes, params):
+        ct = pd.crosstab(df["cluster"], df[param])
+        ct.plot(kind="bar", stacked=True, ax=ax)
+        ax.set_title(param)
+        ax.set_xlabel("cluster")
+        ax.set_ylabel("count")
+
+    fig.tight_layout()
+
+    summary = df.groupby("cluster")[["acc","secs","c1","c2","w","sw"]].mean()
+    print(summary)
+    summary[["acc","secs"]].plot(kind="bar", subplots=True, layout=(1,2), figsize=(8,4), legend=False, title=["acc","secs"])
+    plt.show()
+
+
+    #repeat kmeans without swarm size
+
+        #kmeans clustering
+    features = ["acc", "secs", "c1", "c2", "w"]  
+    X = StandardScaler().fit_transform(df[features])
+
+    kmeans = KMeans(n_clusters=3, random_state=0, n_init="auto").fit(X)
+    df["cluster"] = kmeans.labels_
+
+    #profiel clusters against parameters
+    summary_cluster = df.groupby("cluster")[["acc", "secs", "c1", "c2", "w"]].agg(["mean", "std"])
+    print(summary_cluster)
+
+    #stacked bar plot of params per cluster vs parameter
+    params = ["c1", "c2", "w"]
+    ncols = 2
+    nrows = 2
+    fig, axs = plt.subplots(nrows, ncols, figsize=(10, 10))
+    axes = axs.flatten()
+
+    for ax, param in zip(axes, params):
+        ct = pd.crosstab(df["cluster"], df[param])
+        ct.plot(kind="bar", stacked=True, ax=ax)
+        ax.set_title(param)
+        ax.set_xlabel("cluster")
+        ax.set_ylabel("count")
+
+    fig.tight_layout()
+
+    summary = df.groupby("cluster")[["acc","secs","c1","c2","w"]].mean()
+    print(summary)
+    summary[["acc","secs"]].plot(kind="bar", subplots=True, layout=(1,2), figsize=(8,4), legend=False, title=["acc","secs"])
+    plt.show()
+
+    return best_ids, anova_results
+
 def main():
-    c1_grid = [0.5, 1.7]
-    c2_grid = [0.5, 1.7]
-    w_grid = [0.4, 0.9]
-    swarmsize_grid = [30, 100]
-    iter_grid = [30, 100]
-    batch_grid = [int(len(X_train) * 0.5), int(len(X_train) * 0.8)]
+    c1_grid = [0, 0.1, 0.5, 1.7, 2]
+    c2_grid = [0, 0.1, 0.5, 1.7, 2]
+    w_grid = [0, 0.1, 0.5, 1]
+    swarmsize_grid = [30, 100, 500]
+    iter_grid = [50]
+    batch_grid = [int(len(X_train) * 0.7)]
 
     results = []
  
@@ -323,21 +432,15 @@ def main():
         + " | c2=" + df.c2.astype(str)
         + " | w=" + df.w.astype(str)
         + " | sw=" + df.sw.astype(str)
-        + " | iters=" + df.iters.astype(str)
-        + " | bs=" + df.bs.astype(str)
     )
 
     df = df.reset_index(drop=True)
-    df["run_id"] = df.index
 
-    corr_spearman = df[["acc", "secs", "c1", "c2", "w", "sw", "iters", "bs"]].corr(method="spearman")
-    print(corr_spearman)
 
-    best = df.nlargest(10, "acc")
-    #print(best[["acc", "combo"]])
-    #best.to_excel("../best_configuration.xlsx", index=False)
+    best_ids, anova_results = get_stats(df)
 
-    best_ids = set(best["run_id"])
+    # best_ids.to_excel("../best_configuration.xlsx", index=False)
+
     grouped_plot(df, best_ids)
 
 ###     investigating spread ###

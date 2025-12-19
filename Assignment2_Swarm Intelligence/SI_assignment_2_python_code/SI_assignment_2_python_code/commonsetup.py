@@ -21,12 +21,12 @@ enable objective comparison.
 ############ Select the Dataset ###############
 # Select a data set here. See datasets.py
 
-# data = load_breast_cancer()
-# dataset = "cancer"
+data = load_breast_cancer()
+dataset = "cancer"
 # data = load_glass_data()
 # dataset = "glass"
-data = load_magic_gamma_data()
-dataset = "gamma"
+#data = load_magic_gamma_data()
+#dataset = "gamma"
 ################################
 #data = load_pen_digits_data()
 #dataset = "pen"
