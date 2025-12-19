@@ -199,7 +199,7 @@ def grouped_plot(df, best_ids=None):
     for ax, plot_param in zip(axes, params):
         values = df[plot_param].astype(float)
         norm = Normalize(vmin=values.min(), vmax=values.max())
-        cmap = cm.get_cmap("viridis")  # or "plasma"
+        cmap = plt.colormaps.get_cmap("viridis")  # or "plasma"
         df["param_value"] = plot_param + "_" + df[plot_param].astype(str)
         # map each distinct value to a color by its numeric magnitude
         color_map = {
@@ -314,13 +314,10 @@ def repeat_and_plot(configs, n_repeats=10):
 
 def get_stats(df):
 
-    df_best = df.copy()
-    df_best["run_id"] = df.index
-
-    corr_spearman = df_best[["acc", "secs", "c1", "c2", "w", "sw"]].corr(method="spearman")
+    corr_spearman = df[["acc", "secs", "c1", "c2", "w", "sw"]].corr(method="spearman")
     print("Spearman Correlation Results:")
     print(corr_spearman)
-    best = df_best.nlargest(10, "acc")
+    best = df.nlargest(10, "acc")
     best_ids = set(best["run_id"])
 
 
@@ -331,7 +328,7 @@ def get_stats(df):
 
     #ANOAV w/o sw
     model_no_sw = ols('secs ~ c1 + c2 + w', data=df).fit()
-    anova_results_no_sw = sm.stats.anova_lm(model, type=2)
+    anova_results_no_sw = sm.stats.anova_lm(model_no_sw, type=2)
     print("two-Way Anova Results w/o sw:")
     print(anova_results_no_sw)
 
@@ -345,6 +342,9 @@ def get_stats(df):
     #profiel clusters against parameters
     summary_cluster = df.groupby("cluster")[["acc", "secs", "c1", "c2", "w", "sw"]].agg(["mean", "std"])
     print(summary_cluster)
+    print(kmeans.cluster_centers_)
+    df.groupby("cluster")[["acc","secs","c1","c2","w","sw"]].mean()
+    pd.crosstab(df["cluster"], df["sw"])
 
     #stacked bar plot of params per cluster vs parameter
     params = ["c1", "c2", "w", "sw"]
@@ -363,41 +363,6 @@ def get_stats(df):
     fig.tight_layout()
 
     summary = df.groupby("cluster")[["acc","secs","c1","c2","w","sw"]].mean()
-    print(summary)
-    summary[["acc","secs"]].plot(kind="bar", subplots=True, layout=(1,2), figsize=(8,4), legend=False, title=["acc","secs"])
-    plt.show()
-
-
-    #repeat kmeans without swarm size
-
-        #kmeans clustering
-    features = ["acc", "secs", "c1", "c2", "w"]  
-    X = StandardScaler().fit_transform(df[features])
-
-    kmeans = KMeans(n_clusters=3, random_state=0, n_init="auto").fit(X)
-    df["cluster"] = kmeans.labels_
-
-    #profiel clusters against parameters
-    summary_cluster = df.groupby("cluster")[["acc", "secs", "c1", "c2", "w"]].agg(["mean", "std"])
-    print(summary_cluster)
-
-    #stacked bar plot of params per cluster vs parameter
-    params = ["c1", "c2", "w"]
-    ncols = 2
-    nrows = 2
-    fig, axs = plt.subplots(nrows, ncols, figsize=(10, 10))
-    axes = axs.flatten()
-
-    for ax, param in zip(axes, params):
-        ct = pd.crosstab(df["cluster"], df[param])
-        ct.plot(kind="bar", stacked=True, ax=ax)
-        ax.set_title(param)
-        ax.set_xlabel("cluster")
-        ax.set_ylabel("count")
-
-    fig.tight_layout()
-
-    summary = df.groupby("cluster")[["acc","secs","c1","c2","w"]].mean()
     print(summary)
     summary[["acc","secs"]].plot(kind="bar", subplots=True, layout=(1,2), figsize=(8,4), legend=False, title=["acc","secs"])
     plt.show()
@@ -436,6 +401,7 @@ def main():
 
     df = df.reset_index(drop=True)
 
+    df["run_id"] = df.index
 
     best_ids, anova_results = get_stats(df)
 
