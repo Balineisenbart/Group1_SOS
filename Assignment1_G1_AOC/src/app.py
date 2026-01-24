@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-01_extract_travel_durations.py
-
-Wireframe for a script that extracts travel durations from input data and writes
-the result to an output file.
+Main application to run the Ant Colony Optimization (ACO) algorithm for the Seidl Rally.
+It loads location and travel time data, constructs the ACO graph, and finds the optimal path.
+It also supports hyperparameter tuning and graph visualization.
 
 Usage:
-  python 01_extract_travel_durations.py --input data/input.csv --output data/output.csv
+  python app.py --input-locations data/input.csv --input-durations data/travel_times.csv [--visualize] [--tune]
 """
 
 from __future__ import annotations
